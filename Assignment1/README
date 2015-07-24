@@ -1,0 +1,24 @@
+Additional instructor's comments about your submission
+Q1: 5/5
+
+Q2: 5/5
+
+Q3: 5/5, no check for empty strings.
+
+Q4: 5/5
+
+Q5: 10/10
+
+Q6: 10/10
+
+Q7: 10/10
+
+Q8: 15/15
+
+Q9: 15/15
+
+Q10: 19/20, "citeText" does not check for empty lists in the first argument and is susceptible to out of bounds exceptions if too few references are provided.
+
+ 
+
+Total: 99/100
