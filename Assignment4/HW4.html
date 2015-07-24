@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<!-- saved from url=(0146)https://ecommons.ucsc.edu/access/content/attachment/1720634f-fd4a-4e5a-be2e-e2750be67504/Assignments/28a9b73c-2696-4352-8906-cdd4dac15f8b/hw4.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>HW4</title><meta charset="utf-8">
+  <style>
+  body,div { background-color: #eee; font-family: sans; padding: 1em; }
+  .d6 { font-size: 500%; } 
+  </style>
+<style type="text/css"></style></head>
+<body>
+  <form action="https://ecommons.ucsc.edu/access/content/attachment/1720634f-fd4a-4e5a-be2e-e2750be67504/Assignments/28a9b73c-2696-4352-8906-cdd4dac15f8b/hw4.html#">
+    <input type="text" id="from">
+	<select id="fromUnit">
+  <option value="c" selected="selected">Celsius</option>
+  <option value="f">Fahrenheit</option>
+  <option value="k">Kelvin</option>
+</select>
+    =
+    <input type="text" id="to"> 
+	<select id="toUnit">
+  <option value="c">Celsius</option>
+  <option value="f" selected="selected">Fahrenheit</option>
+  <option value="k">Kelvin</option>
+</select>
+<div>
+  <button id="restart">Restart</button>
+  <p id="score">Score: _ (_ dice with _ dots each)</p>
+  <p id="rolls">5 rolls left</p>
+  <div id="dice"></div>
+</div>
+  </form>
+  <script src="./HW4_files/jquery.min.js">
+  </script>
+  <script>
+  $(function() {
+    // FIXME
+	var input    = '';
+    var output   = '';
+	var inCheck  = '';
+	var outCheck = '';
+	$("#from,#to").keyup(function(){ 
+	    if(this.id == "from"){
+		  input    = "#from";
+		  output   = "#to";
+          inCheck  = "#fromUnit";
+          outCheck = "#toUnit";  
+		}else if (this.id == "to"){
+		  input   = "#to";
+		  output  = "#from";
+	      inCheck = "#toUnit";
+		  outCheck = "#fromUnit";
+		}
+        setOut(input, output, inCheck, outCheck);
+    });
+   
+  $("select").change(function(){
+       if(this.id == "fromUnit"){
+	      input  = "#from";
+		  output = "#to";
+          inCheck  = "#fromUnit";
+          outCheck = "#toUnit";   	      
+       }else if (this.id == "toUnit"){
+          input   = "#to";
+		  output  = "#from";
+	      inCheck = "#toUnit";
+		  outCheck = "#fromUnit";
+		}   
+		 setOut(input, output, inCheck, outCheck);
+   });
+   
+   function setOut(inp, outp, inc, outc){
+   var input = $(inp).val();
+   var fromCheck = $(inc).val();
+   var toCheck = $(outc).val();
+   if( fromCheck == "c" && toCheck == "f"){
+	   var x = ((9/5)*(input)) + 32;
+	   $(outp).val(x);
+	}else if (fromCheck == "c" && toCheck == "k"){
+	   var x = ((1)*(input)) + 273.15;
+	   $(outp).val(x);
+	}else if (fromCheck == "f" && toCheck == "k"){
+       var x = ((input - 32) * (5/9) + 273.15);
+	   $(outp).val(x);
+	}else if (fromCheck == "f" && toCheck == "c"){
+	   var x = ((input - 32) * (5/9));
+	   $(outp).val(x);
+	}else if (fromCheck == "k" && toCheck == "c"){
+	   var x = ((1)*(input)) - 273.15;
+	   $(outp).val(x);
+	}else if (fromCheck == "k" && toCheck == "f"){
+	   var x = (9/5) * (input - 273) + 32;
+	   $(outp).val(x);
+	}else{
+       $(outp).val(input); 
+	}
+   }
+  });   
+   
+
+   
+   // Number 5
+   function randInt(min, max) { 
+      if(min >= max){
+	     return min;
+	  }else{
+         return Math.floor(Math.random() * (max - min + 1)) + min;
+	  }
+   }
+   // Number 6
+   function createDice(num){
+       return function() {
+	      return (randInt(1,num));
+		  }
+   }
+   
+   function Dice() {
+    this.diceRoll = createDice(6);
+    // should assign the "this.el" property to be a jQuery-wrapped
+    // <span> HTML element with the CSS class "d6" using one of the
+    // icons as inner text.
+	this.rollNum = this.diceRoll();
+    this.icons = ["⚀","⚁","⚂","⚃","⚄","⚅"];
+    this.el = $('<span>', {'class' : 'd6',text: this.icons[this.rollNum-1]});
+					
+    
+}
+
+Dice.prototype.render = function() {
+    // updates the HTML represenation by changing the icon in the
+    // jQuery-wrapped element in the "this.el" property
+    $(this.el).text(this.icons[this.rollNum - 1]);
+	}
+Dice.prototype.roll = function() {
+    // rolls this die and updates the represenation
+    // randInt(1,6)
+	this.rollNum = this.diceRoll();
+    this.render();
+}
+
+
+  
+
+    
+	//Number 9
+   function UnfairDice(){
+      Dice.call(this);  
+	  this.rand = randInt(1,100);
+	}  
+	UnfairDice.prototype.render = function(){
+	    if(this.rand > 0 && this.rand <= 10){
+	       $(this.el).text(this.icons[0]);
+		}else if (this.rand > 10 && this.rand <= 20){
+		   $(this.el).text(this.icons[1]);
+		}else if (this.rand > 20 && this.rand <= 30){
+		   $(this.el).text(this.icons[2]);
+		}else if (this.rand > 30 && this.rand <= 40){
+		   $(this.el).text(this.icons[3]);
+		}else if (this.rand > 40 && this.rand <= 50){
+		   $(this.el).text(this.icons[4]);
+		}else if (this.rand > 50 && this.rand <= 100){
+	       $(this.el).text(this.icons[5]);
+		}   
+	}
+	UnfairDice.prototype.roll = function() {
+	   this.rand = randInt(1,100);
+	   
+	   this.render();
+	}
+	
+	//NUMBER 10
+	function YatzyGame(){
+	   Dice.call(this);
+	   this.num = this.rollNum;
+	   
+	}
+	YatzyGame.prototype = Object.create(Dice.prototype);
+	YatzyGame.prototype.roll = function() {
+		if (rolls > 0){
+		   rolls--;
+		   Dice.prototype.roll.call(this);
+		}
+	}
+	YatzyGame.prototype.number = function() {
+	     return this.num = this.rollNum;
+	}
+     var d1 = new YatzyGame(); 	
+	   $("body").append(d1.el);  
+	 var d2 = new YatzyGame(); 	
+	   $("body").append(d2.el);  
+	 var d3 = new YatzyGame(); 	
+	   $("body").append(d3.el); 
+     var d4 = new YatzyGame(); 	
+	   $("body").append(d4.el);  
+     var d5 = new YatzyGame(); 	
+	   $("body").append(d5.el);
+	   var x = 0;
+	   var dots = 0;
+	   
+	 // Does the Yatzy Game  
+    function Yatz(){
+	var counter1 = 0;
+    var	counter2 = 0;
+	var counter3 = 0;
+	var counter4 = 0;
+	var counter5 = 0;
+	var counter6 = 0;
+	   if(d1.number() == 1){
+	     counter1 = counter1 + 1;
+	   }
+	   if(d2.number() == 1){
+	      counter1 = counter1 + 1;
+	   }
+	    if(d3.number()== 1){
+	      counter1 = counter1 + 1;
+	   }
+	  if(d4.number() == 1){
+	      counter1 = counter1 + 1;
+	   }
+	  if(d5.number() == 1){
+	      counter1 = counter1 + 1;
+	   }
+	 if(d1.number() == 2){
+	     counter2++;
+	   }
+	   if(d2.number() == 2){
+	     counter2++;
+	   }
+	    if(d3.number() == 2){
+	     counter2++;
+	   }
+	  if(d4.number() == 2){
+	     counter2++;
+	   }
+	  if(d5.number() == 2){
+	     counter2++;
+	   }
+	    if(d1.number() == 3){
+	     counter3++;
+	   }
+	   if(d2.number() == 3){
+	     counter3++;
+	   }
+	    if(d3.number() == 3){
+	     counter3++;
+	   }
+	  if(d4.number() == 3){
+	     counter3++;
+	   }
+	  if(d5.number() == 3){
+	     counter3++;
+	   }
+	    if(d1.number() == 4){
+	     counter4++;
+	   }
+	   if(d2.number() == 4){
+	     counter4++;
+	   }
+	    if(d3.number() == 4){
+	     counter4++;
+	   }
+	  if(d4.number() == 4){
+	     counter4++;
+	   }
+	  if(d5.number() == 4){
+	     counter4++;
+	   }
+	     if(d1.number() == 5){
+	     counter5++;
+	   }
+	   if(d2.number() == 5){
+	     counter5++;
+	   }
+	    if(d3.number() == 5){
+	     counter5++;
+	   }
+	  if(d4.number() == 5){
+	     counter5++;
+	   }
+	  if(d5.number() == 5){
+	     counter5++;
+	   }
+	   if(d1.number() == 6){
+	     counter6++;
+	   }
+	   if(d2.number() == 6){
+	     counter6++;
+	   }
+	    if(d3.number() == 6){
+	     counter6++;
+	   }
+	  if(d4.number() == 6){
+	     counter6++;
+	   }
+	  if(d5.number() == 6){
+	     counter6++;
+	   }
+	   
+	 x = Math.max(counter1,counter2,counter3,counter4,counter5,counter6);
+	 
+	 var num = 0;
+	 if(counter1 == x){
+	    num = (1 * x);
+		dots = 1;
+	 }
+	  if(counter2 == x){
+	   num = (2 * x);
+	   dots = 2;
+	 }
+	  if(counter3 == x){
+	    num = (3 * x);
+		dots = 3;
+	 }
+	  if(counter4 == x){
+	  num = (4 * x);
+	    dots = 4;
+	 }
+	  if(counter5 == x){
+	   num = (5 * x);
+	    dots = 5;
+	 }
+	  if(counter6 == x){
+	   num = (6 * x);
+	   dots = 6;
+	 }
+	 return num;
+	 }
+	 var rolls = 5;
+     $(d1.el).click(function() {
+	
+       d1.roll();
+	   
+	   score =  Yatz();
+	   $("#score").text("Score:" + score + " (" + x +" dice with " + dots + " dots each)");
+	   $("#rolls").text(rolls + " rolls left");
+	  
+     });
+      $(d2.el).click(function() {
+	   d2.roll();
+       score = Yatz();
+	   $("#score").text("Score:" + score + " (" + x +" dice with " + dots + " dots each)");
+	   $("#rolls").text(rolls + " rolls left");
+      });
+      	  
+	   $(d3.el).click(function() {
+	   d3.roll();
+          score = Yatz();
+	      $("#score").text("Score:" + score + " (" + x +" dice with " + dots + " dots each)");
+	     $ ("#rolls").text(rolls + " rolls left");
+      });
+	  $(d4.el).click(function() {
+	      d4.roll();
+          score = Yatz();
+	      $("#score").text("Score:" + score + " (" + x +" dice with " + dots + " dots each)");
+	      $("#rolls").text(rolls + " rolls left");
+      });
+	   $(d5.el).click(function() {
+	      d5.roll();
+          score = Yatz();
+	      $("#score").text("Score:" + score + " (" + x +" dice with " + dots + " dots each)");
+	      $("#rolls").text(rolls + " rolls left");
+      });
+	  $("#restart").click(function() {
+	      
+		  d1.roll();
+		  d2.roll();
+		  d3.roll();
+		  d4.roll();
+		  d5.roll();
+		  score = Yatz();
+		  rolls = 5;
+		  $("#score").text("Score:" + score + " (" + x +" dice with " + dots + " dots each)");
+	      $("#rolls").text(rolls + " rolls left");
+	  });
+	  
+	  
+	//Number 11
+	//function square(x) {
+		//console.log("computed sq " + x);
+		//return x * x;
+	//}
+	function memoize(x){
+	   var memory;
+	   var input;
+	   console.log(memory);
+	   
+	   return function(n) {
+			if(n == input){
+			   return memory;
+			}
+			memory = x(n);
+			input = n;
+			return memory;
+	   };
+	   }
+	
+  </script><span class="d6">⚀</span><span class="d6">⚁</span><span class="d6">⚂</span><span class="d6">⚅</span><span class="d6">⚅</span>
+
+</body></html>
